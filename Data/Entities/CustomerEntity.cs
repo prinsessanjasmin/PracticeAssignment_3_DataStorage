@@ -19,7 +19,7 @@ public class CustomerEntity
     [Required]
     [Column(TypeName = "varchar(150)")]
     public string Email { get; set; } = null!;
-    
+    [Column(TypeName = "varchar(20)")]
     public string PhoneNumber { get; set; } = null!;
 
 }
