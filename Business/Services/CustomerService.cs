@@ -2,7 +2,6 @@
 using Business.Dtos;
 using Business.Factories;
 using Business.Interfaces;
-using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
 using System.Diagnostics;
@@ -19,26 +18,11 @@ public class CustomerService : ICustomerService
         _customerRepository = customerRepository;
     }
 
-    public Customer CreateCustomer(CustomerDto dto)
+    public async Task <CustomerEntity> CreateCustomerEntityAsync(CustomerDto dto)
     {
         try
         {
-            Customer customer = CustomerFactory.Create(dto);
-            return customer;
-        }
-        catch (Exception ex) 
-        {
-            Debug.WriteLine($"Error creating customer. :: {ex.Message}");
-            return null!;
-        }
-
-    }
-
-    public async Task <CustomerEntity> CreateCustomerEntityAsync(Customer customer)
-    {
-        try
-        {
-            CustomerEntity customerEntity = CustomerFactory.Create(customer);
+            CustomerEntity customerEntity = CustomerFactory.Create(dto);
             await _customerRepository.CreateAsync(customerEntity); 
             return customerEntity;
         }
@@ -49,16 +33,16 @@ public class CustomerService : ICustomerService
         }
     }
 
-    public async Task <IEnumerable<Customer>> GetCustomerListAsync()
+    public async Task <IEnumerable<CustomerDto>> GetCustomerListAsync()
     {
         try
         {
             var entityList = await _customerRepository.GetAllAsync();
-            List<Customer> result = new List<Customer>();
+            List<CustomerDto> result = [];
             foreach (var entity in entityList)
             {
-                Customer customer = CustomerFactory.Create(entity);
-                result.Add(customer);
+                CustomerDto dto = CustomerFactory.Create(entity);
+                result.Add(dto);
             }
             return result;
         }
@@ -70,7 +54,7 @@ public class CustomerService : ICustomerService
     }
 
 
-    public async Task <Customer> GetCustomerByIdAsync(int id)
+    public async Task <CustomerDto> GetCustomerByIdAsync(int id)
     {
         if (id < 0)
             return null!;
@@ -78,8 +62,8 @@ public class CustomerService : ICustomerService
         try
         {
             var customerEntity = await _customerRepository.GetCustomerByIdAsync(id);
-            Customer customer = CustomerFactory.Create(customerEntity);
-            return customer;
+            CustomerDto dto = CustomerFactory.Create(customerEntity);
+            return dto;
         }
         catch (Exception ex)
         {
@@ -89,14 +73,14 @@ public class CustomerService : ICustomerService
     }
 
 
-    public async Task <Customer> UpdateCustomerAsync(Customer customer)
+    public async Task <CustomerDto> UpdateCustomerAsync(int id, CustomerDto dto)
     {
         try
         {
-            CustomerEntity customerEntity = CustomerFactory.Create(customer);
-            CustomerEntity updatedContact = await _customerRepository.UpdateAsync(customerEntity); 
+            CustomerEntity editedEntity = CustomerFactory.Create(id, dto);
+            CustomerEntity existingEntity = await _customerRepository.UpdateAsync(editedEntity); 
             
-            return CustomerFactory.Create(customerEntity);
+            return CustomerFactory.Create(existingEntity);
         }
         catch (Exception ex)
         {

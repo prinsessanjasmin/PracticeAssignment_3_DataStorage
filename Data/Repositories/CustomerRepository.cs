@@ -70,7 +70,10 @@ public class CustomerRepository(DataContext context) : ICustomerRepository
         try
         {
             var existingCustomer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == updatedCustomer.Id);
-            _context.Entry(existingCustomer!).CurrentValues.SetValues(updatedCustomer);
+            if (existingCustomer == null)
+                return null!; 
+
+            _context.Entry(existingCustomer).CurrentValues.SetValues(updatedCustomer);
             await _context.SaveChangesAsync();
             return existingCustomer!;
         }

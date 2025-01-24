@@ -9,7 +9,7 @@ public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     public DataContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-        optionsBuilder.UseSqlServer(@"C:\Projects\PracticeAssignment_3\Data\Database\CustomerDatabase.mdf");
+        optionsBuilder.UseSqlServer(@"Data Source =(LocalDB)\MSSQLLocalDB;AttachDbFileName=C:\Projects\PracticeAssignment_3\Data\Database\CustomerDatabase.mdf");
 
         return new DataContext(optionsBuilder.Options);
     }

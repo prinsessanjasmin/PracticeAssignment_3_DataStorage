@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250123115015_Customer Table Added")]
-    partial class CustomerTableAdded
+    [Migration("20250123115643_Customers Table Added")]
+    partial class CustomersTableAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,11 +46,11 @@ namespace Data.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 #pragma warning restore 612, 618
         }
